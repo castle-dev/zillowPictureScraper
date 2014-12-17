@@ -1,0 +1,11 @@
+{
+  "name"         : "zillow-picture-scraper",
+  "version"      : "0.0.1",
+  "description"  : "Scrape Zillow for home pictures",
+  "main"         : "server.js",
+  "author"       : "Tim Dingman",
+  "dependencies" : {
+    "request"    : "latest",
+    "cheerio"    : "latest"
+  }
+}
