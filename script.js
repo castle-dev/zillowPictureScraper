@@ -13,6 +13,15 @@ var url = process.argv[2];
    fs.mkdirSync(imagesFolder);
   }
 
+  fs.readdir(imagesFolder, function(err, files) {
+    if (err) console.log(err);
+    files.forEach(function(file, index, array) {
+      var deletePath = path.join(imagesFolder, file);
+      fs.unlinkSync(deletePath);
+      console.log('Deleted ' + deletePath);
+    });
+  });
+
   console.log('Scraping images from ' + url);
 
   // Define our download function to get images
