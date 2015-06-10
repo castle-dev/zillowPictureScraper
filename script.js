@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 var request = require('request');
 var cheerio = require('cheerio');
 
@@ -6,8 +7,12 @@ var cheerio = require('cheerio');
 var url = process.argv[2];
 
 (function(){
-  //All the web scraping magic will happen here
- 
+  // Make sure our target exists, and make it if it doesn't
+  var imagesFolder = './images';
+  if (!fs.existsSync(imagesFolder)) {
+   fs.mkdirSync(imagesFolder);
+  }
+
   console.log('Scraping images from ' + url);
 
   // Define our download function to get images
@@ -59,9 +64,12 @@ var url = process.argv[2];
         // Zillow gives each img an ID
         // Use it for file naming
         imageID = img.attr('id');
+        var imageName = imageID + '.jpg';
+        var imagePath = path.join(imagesFolder, imageName);
+        console.log(imagePath);
 
         // Download the file and store it with its ID
-        download(imageLink, imageID + '.jpg', function(){
+        download(imageLink, imagePath, function(){
           console.log('Downloaded ' + imageLink);
         });
       });
