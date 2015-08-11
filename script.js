@@ -27,18 +27,19 @@ var url = process.argv[2];
   // Define our download function to get images
   var download = function(uri, filename, callback){
     request.head(uri, function(err, res, body){
+      if (err) console.log(err);
       request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
     });
   };
   
   //Here's where we make our request
   request(url, function(error, response, html){
-
+    console.log('request called');
     if(!error) {
     
       // Cheerio gives us jQuery-like functionality
       var $ = cheerio.load(html);
-      
+      console.log('loaded html');
       // We want the links to the house images,
       // which we'll later download
       var imageLinks = [];
@@ -57,7 +58,14 @@ var url = process.argv[2];
         var img = listItem
           .children().eq(1)
           .children().first();
-        
+       
+        // Occasionally, the img is not an img
+        var tagType = img[0].name;
+        if (tagType !== 'img') {
+          img = listItem
+            .children().eq(1)
+            .children().eq(4);
+        }
         // Get the image link out of the img
         // The first two imgs use src,
         // and each one after uses href
@@ -69,6 +77,7 @@ var url = process.argv[2];
           imageLink = img.attr('href');
         }
         imageLinks.push(imageLink);
+        console.log(imageLink);
 
         // Zillow gives each img an ID
         // Use it for file naming
@@ -82,6 +91,9 @@ var url = process.argv[2];
           console.log('Downloaded ' + imageLink);
         });
       });
+    }
+    else {
+      console.log(error);
     }
   });
 
